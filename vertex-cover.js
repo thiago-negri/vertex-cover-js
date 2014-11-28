@@ -88,6 +88,34 @@ var isIn = function(array) {
   };
 };
 
+// Heuristica de aproximação, conforme
+// "Introduction to Algorithms" de Cormen et al. (pag. 1109)
+var approxVertexCover = function(G) {
+  var C = [],
+      E = [],
+      removedEdge,
+      v1, v2;
+
+  G.E.forEach(function(e) {
+    E.push(e);
+  });
+
+  while (E.length > 0) {
+    removedEdge = E.shift();
+    v1 = removedEdge[0];
+    v2 = removedEdge[1];
+    C.push(v1);
+    C.push(v2);
+    E = E.filter(function(e) {
+      var a = e[0],
+          b = e[1];
+      return a != v1 && a != v2 && b != v1 && b != v2;
+    });
+  }
+
+  return C;
+};
+
 // Heuristica de lista para cobertura dos vertices, conforme
 // "A list heuristic for vertex cover" de David Avis e Tomokazu Imamura (2006)
 var vertexCoverListLeft = function(G) {
@@ -125,15 +153,19 @@ var vertexCoverListRight = function(G) {
 };
 
 // Executa o algoritmo
+var resultApprox1 = approxVertexCover(G1);
 var resultLeft1 = vertexCoverListLeft(G1);
 var resultRight1 = vertexCoverListRight(G1);
+var resultApprox2 = approxVertexCover(G2);
 var resultLeft2 = vertexCoverListLeft(G2);
 var resultRight2 = vertexCoverListRight(G2);
 
 // Exibe a lista de vertices que formam a cobertura de vertices
 console.log('G1:')
-console.log('  left: ' + resultLeft1);
-console.log('  right: ' + resultRight1);
+console.log('  approx: ' + resultApprox1);
+console.log('  left..: ' + resultLeft1);
+console.log('  right.: ' + resultRight1);
 console.log('G2:');
-console.log('  left: ' + resultLeft2);
-console.log('  right: ' + resultRight2);
+console.log('  approx: ' + resultApprox2);
+console.log('  left..: ' + resultLeft2);
+console.log('  right.: ' + resultRight2);
